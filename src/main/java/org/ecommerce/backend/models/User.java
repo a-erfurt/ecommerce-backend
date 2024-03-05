@@ -49,7 +49,18 @@ public class User {
         this.password = password;
     }
 
-    // getters and setters
+    public User(String username, String email, String password, BigDecimal balance) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.balance = balance;
+    }
+
+    public User(String username, String email, BigDecimal balance) {
+        this.username = username;
+        this.email = email;
+        this.balance = balance;
+    }
 
     public Long getId() {
         return id;
@@ -97,5 +108,13 @@ public class User {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public void deposit(BigDecimal amount) {
+        this.balance = this.balance.add(amount);
+    }
+
+    public void withdraw(BigDecimal amount) {
+        this.balance = this.balance.subtract(amount);
     }
 }
