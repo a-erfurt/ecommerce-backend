@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
@@ -23,4 +25,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return UserDetailsImpl.build(user);
     }
 
+    @Transactional(readOnly = true)
+    public User findById(Long userId) throws UsernameNotFoundException {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with id: " + userId));
+    }
+
+    @Transactional
+    public void updateBalance(User user, BigDecimal amount) {
+        user.setBalance(user.getBalance().add(amount));
+        userRepository.save(user);
+    }
 }
