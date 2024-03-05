@@ -18,13 +18,10 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/profile")
-    @PreAuthorize("hasRole('USER')")
-    public User getUserProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUserName = authentication.getName();
-
-        User user = userRepository.findByUsername(currentUserName)
+    @GetMapping("{id}")
+    @PreAuthorize("#id == principal.id or hasRole('ADMIN')")
+    public User getUserProfile(@PathVariable Long id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return new User(user.getUsername(), user.getEmail(), user.getBalance());
     }

@@ -2,7 +2,7 @@ package org.ecommerce.backend.repository;
 
 import java.util.Optional;
 
-import org.ecommerce.backend.models.ERole;
+import org.ecommerce.backend.models.enums.ERole;
 import org.ecommerce.backend.models.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

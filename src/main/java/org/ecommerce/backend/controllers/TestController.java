@@ -20,15 +20,9 @@ public class TestController {
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public String userAccess() {
         return "User Content.";
-    }
-
-    @GetMapping("/mod")
-    @PreAuthorize("hasRole('MODERATOR')")
-    public String moderatorAccess() {
-        return "Moderator Board.";
     }
 
     @GetMapping("/admin")
@@ -43,5 +37,13 @@ public class TestController {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return user.getBalance();
+    }
+
+    @GetMapping("/user/{id}")
+    @PreAuthorize("#id == principal.id or hasRole('ADMIN')")
+    public User getUserProfile(@PathVariable Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return new User(user.getUsername(), user.getEmail(), user.getBalance());
     }
 }

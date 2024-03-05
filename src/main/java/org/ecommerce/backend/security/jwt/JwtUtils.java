@@ -18,7 +18,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${bezkoder.app.jwtSecret}")
+    @Value("======================BezKoder=Spring===========================")
     private String jwtSecret;
 
     @Value("${bezkoder.app.jwtExpirationMs}")

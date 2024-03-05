@@ -1,6 +1,7 @@
 package org.ecommerce.backend.models;
 
 import jakarta.persistence.*;
+import org.ecommerce.backend.models.enums.ERole;
 
 @Entity
 @Table(name = "roles")
