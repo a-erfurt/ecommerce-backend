@@ -30,18 +30,6 @@ public class TransactionService {
     public Page<Transaction> getTransactionsByUser(User user, Pageable pageable) {
         return transactionRepository.findByUserOrderByDateTimeDesc(user, pageable);
     }
-
-    @Transactional(readOnly = true)
-    public List<Transaction> getTransactionsBetweenDates(LocalDateTime start, LocalDateTime end) {
-        return transactionRepository.findByDateTimeBetween(start, end);
-    }
-
-    public BigDecimal calculateTotalAmount(List<Transaction> transactions) {
-        return transactions.stream()
-                .map(Transaction::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
     @Transactional
     public Transaction createTransaction(User user, BigDecimal amount, TransactionType type) {
         if (type == TransactionType.WITHDRAWAL && user.getBalance().compareTo(amount) < 0) {
@@ -63,11 +51,6 @@ public class TransactionService {
         }
 
         return savedTransaction;
-    }
-
-    @Transactional(readOnly = true)
-    public List<Transaction> getUserTransactions(Long userId) {
-        return transactionRepository.findByUserId(userId);
     }
 
     @Transactional(readOnly = true)

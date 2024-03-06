@@ -44,9 +44,6 @@ public class Transaction {
         this.dateTime = dateTime;
     }
 
-    // Getter und Setter
-    // ...
-
     public Long getId() {
         return id;
     }
