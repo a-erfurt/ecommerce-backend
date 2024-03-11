@@ -5,6 +5,7 @@ import org.ecommerce.backend.models.Transaction;
 import org.ecommerce.backend.models.TransactionRequest;
 import org.ecommerce.backend.models.User;
 import org.ecommerce.backend.models.enums.ERole;
+import org.ecommerce.backend.models.enums.TransactionStatus;
 import org.ecommerce.backend.models.enums.TransactionType;
 import org.ecommerce.backend.repository.UserRepository;
 import org.ecommerce.backend.security.services.TransactionService;
@@ -68,6 +69,36 @@ public class AdminController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Page<Transaction> transactions = transactionService.getTransactionsForUserBetweenDates(user, start, end, pageable);
         return ResponseEntity.ok(transactions);
+    }
+
+    @PutMapping("/transactions/{transactionId}/approve")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> approveTransaction(@PathVariable Long transactionId) {
+        Transaction transaction = transactionService.findById(transactionId)
+                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+
+        if (transaction.getStatus() != TransactionStatus.PENDING) {
+            return ResponseEntity.badRequest().body("Transaction is not in pending status");
+        }
+
+        transaction.setStatus(TransactionStatus.COMPLETED);
+        Transaction updatedTransaction = transactionService.saveTransaction(transaction);
+        return ResponseEntity.ok(updatedTransaction);
+    }
+
+    @PutMapping("/transactions/{transactionId}/reject")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> rejectTransaction(@PathVariable Long transactionId) {
+        Transaction transaction = transactionService.findById(transactionId)
+                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+
+        if (transaction.getStatus() != TransactionStatus.PENDING) {
+            return ResponseEntity.badRequest().body("Transaction is not in pending status");
+        }
+
+        transaction.setStatus(TransactionStatus.REJECTED);
+        Transaction updatedTransaction = transactionService.saveTransaction(transaction);
+        return ResponseEntity.ok(updatedTransaction);
     }
 
 }

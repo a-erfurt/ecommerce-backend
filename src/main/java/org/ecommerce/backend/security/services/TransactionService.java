@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TransactionService {
@@ -58,4 +59,8 @@ public class TransactionService {
         return transactionRepository.findByUserAndDateTimeBetween(user, start, end, pageable);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<Transaction> findById(Long transactionId) {
+        return transactionRepository.findById(transactionId);
+    }
 }
